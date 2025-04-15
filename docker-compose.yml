@@ -11,8 +11,6 @@ services:
       - HOST=db
       - USER=odoo
       - PASSWORD=odoo
-    networks:
-      - odoo-net
 
   db:
     image: postgres:17
