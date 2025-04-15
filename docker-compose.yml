@@ -8,11 +8,9 @@ services:
     volumes:
       - ./config/odoo.conf:/etc/odoo.conf
     environment:
-      - HOST=db
+      - HOST=odoo18_db_1
       - USER=odoo
       - PASSWORD=odoo
-    command:
-      odoo -c /etc/odoo/odoo.conf
 
   db:
     image: postgres:17
