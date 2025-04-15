@@ -11,6 +11,8 @@ services:
       - HOST=db
       - USER=odoo
       - PASSWORD=odoo
+    command:
+      odoo -c /etc/odoo/odoo.conf
 
   db:
     image: postgres:17
