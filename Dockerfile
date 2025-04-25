@@ -27,4 +27,4 @@ WORKDIR /opt/odoo
 
 EXPOSE 8069
 
-CMD ["python3", "odoo-bin", "-c", "/etc/config/odoo.conf"]
+CMD ["python3", "odoo-bin", "-c", "/etc/odoo.conf"]
