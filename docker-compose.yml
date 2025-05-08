@@ -12,8 +12,8 @@ services:
       - "--certificatesresolvers.le.acme.email=nguyenlb@onexapis.com"
       - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
     ports:
-      - "80:80"
-      - "443:443"
+      - "81:81"
+      - "444:444"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./letsencrypt:/letsencrypt"
