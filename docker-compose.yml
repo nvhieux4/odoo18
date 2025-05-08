@@ -1,8 +1,49 @@
 services:
+  traefik:
+    image: traefik:v2.10
+    command:
+      # Enable Docker provider
+      - "--providers.docker=true"
+      # Define entrypoints for HTTP and HTTPS
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # Let’s Encrypt TLS‑ALPN challenge configuration
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
+      - "--certificatesresolvers.le.acme.email=nguyenlb@onexapis.com"
+      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+    networks:
+      - odoo_onex_networks
   web:
     build: .
     depends_on:
       - db
+    networks:
+      - odoo_onex_networks
+    labels:
+      # Bắt buộc để bật routing cho container
+      - "traefik.enable=true"
+      # HTTP router để redirect sang HTTPS
+      - "traefik.http.routers.odoo-onex-http.rule=Host(`odoo.onexapis.com`)"
+      - "traefik.http.routers.odoo-onex-http.entrypoints=web"
+      - "traefik.http.routers.odoo-onex-http.middlewares=https-redirect"
+
+      # Middleware để chuyển sang HTTPS
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+
+      # HTTPS router dùng TLS
+      - "traefik.http.routers.odoo-onex.rule=Host(`odoo.onexapis.com`)"
+      - "traefik.http.routers.odoo-onex.entrypoints=websecure"
+      - "traefik.http.routers.odoo-onex.tls=true"
+      - "traefik.http.routers.odoo-onex.tls.certresolver=le"
+
+      # Chỉ định port nội bộ của app
+      - "traefik.http.services.odoo-onex.loadbalancer.server.port=8080"
     ports:
       - "8080:8069"
     volumes:
@@ -20,8 +61,14 @@ services:
       POSTGRES_USER: odoo
       POSTGRES_PASSWORD: odoo
       POSTGRES_DB: odoo
+    networks:
+      - odoo_onex_networks
     volumes:
       - db_data:/var/lib/postgresql/data
 
 volumes:
   db_data:
+
+networks:
+  odoo_onex_networks:
+    driver: bridge
