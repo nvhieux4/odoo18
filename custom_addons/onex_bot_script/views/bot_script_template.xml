@@ -1,0 +1,15 @@
+<odoo>
+  <template id="onex_bot_script_inject" inherit_id="website.layout">
+    <xpath expr="//body" position="before">
+      <t t-set="bot_config" t-value="request.env['onex.bot.script.config'].sudo().search([('active', '=', True)], limit=1)"/>
+      <t t-if="bot_config and bot_config.api_key">
+        <script>
+          console.log("✅ Bot script đã hoạt động, API KEY: ");
+        </script>
+      </t>
+      <t t-if="bot_config and bot_config.script_code">
+        <t t-raw="bot_config.script_code"/>
+      </t>
+    </xpath>
+  </template>
+</odoo>

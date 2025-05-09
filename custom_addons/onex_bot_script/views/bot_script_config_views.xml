@@ -1,0 +1,45 @@
+<odoo>
+    <data>
+
+        <!-- Tạo menu gốc cho App -->
+        <menuitem id="menu_onex_bot_script_root" name="Bot Script" sequence="10"/>
+
+        <!-- Tạo view form trước -->
+        <record id="view_bot_script_config_form" model="ir.ui.view">
+            <field name="name">bot.script.config.form</field>
+            <field name="model">onex.bot.script.config</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Bot Script Configuration" create="false" editable="bottom">
+                    <sheet>
+                        <group>
+                            <field name="api_key"/>
+                            <field name="script_code"/>
+                            <field name="active" widget="boolean"/>
+                        </group>
+                    </sheet>
+                    <footer>
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tạo action sau khi view đã được định nghĩa -->
+        <record id="action_bot_script_config" model="ir.actions.act_window">
+            <field name="name">Bot Script Configuration</field>
+            <field name="res_model">onex.bot.script.config</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+            <field name="view_id" ref="view_bot_script_config_form"/>
+            <field name="context">{'create': False}</field>
+        </record>
+
+        <!-- Gán menu con vào menu cha -->
+        <menuitem id="menu_bot_script_config"
+                  name="Bot Script Configuration"
+                  parent="menu_onex_bot_script_root"
+                  action="action_bot_script_config"/>
+
+    </data>
+</odoo>
